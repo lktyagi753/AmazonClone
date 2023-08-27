@@ -39,20 +39,22 @@ function Payment() {
           card: elements.getElement(CardElement),
         },
       })
-      .then((result) => {
+      .then(({ paymentIntent }) => {
+        if (paymentIntent.status === 'succeeded') {
         axios.post("/orders/add", {
           basket: basket,
           price: getBasketTotal(basket),
           email: user?.email,
           address: address,
         });
-
+      }
         dispatch({
           type: "EMPTY_BASKET",
         });
         navigate("/");
+        alert("Order Placed Successfully");
       })
-      .catch((err) => console.warn(err));
+      .catch((err) => alert("Invalid Card details"));
   };
 
   return (
@@ -206,17 +208,6 @@ const Description = styled.div`
     margin-top: 10px;
   }
 
-  button {
-    background-color: transparent;
-    color: #1384b4;
-    border: none;
-    outline: none;
-    margin-top: 10px;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 `;
 const SubTotal = styled.div`
   flex: 0.3;
@@ -255,6 +246,11 @@ const SubTotal = styled.div`
     outline: none;
 
     border-radius: 8px;
+    &:hover
+    {
+      scale: 1.1;
+      cursor: pointer;
+    }
   }
 `;
 export default Payment

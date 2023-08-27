@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -5,16 +6,27 @@ const Products = require('./Products')
 const bcrypt = require("bcryptjs");
 const Users = require("./User");
 const Orders = require("./Orders");
-const stripe = require("stripe")("sk_test_51NetPNSJXS9mts3j01tkVQwarDX1MD9JSpMAErTCl4A7fT2ykim4eqVsEoqZcYyv5he4svWB9c32ypzB5e5X6cbo00MY3pAEsK");
+const stripe = require("stripe")(process.env.STRING);
+const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 
 
 app.use(express.json());
 app.use(cors());
 
-const connection_url = 'mongodb+srv://admin:Love7534@cluster0.cokfbhy.mongodb.net/?retryWrites=true&w=majority'
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./client/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
+});
+
+const connection_url = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.cokfbhy.mongodb.net/?retryWrites=true&w=majority`
 
 mongoose.connect(connection_url,{
     useNewUrlParser: true,

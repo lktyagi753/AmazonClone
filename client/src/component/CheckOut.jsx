@@ -141,6 +141,10 @@ button{
   border: none;
   outline: none; 
   border-radius: 8px;
+  &:hover{
+    scale: 1.1;
+    cursor: pointer;
+  }
 }
 `;
 const Product = styled.div`
