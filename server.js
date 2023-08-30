@@ -16,41 +16,41 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, "./client/build")));
-app.get("*", function (_, res) {
-  res.sendFile(
-    path.join(__dirname, "./client/build/index.html"),
-    function (err) {
-      res.status(500).send(err);
-    }
-  );
-});
+// app.use(express.static(path.join(__dirname, "./client/build")));
+// app.get("*", function (_, res) {
+//   res.sendFile(
+//     path.join(__dirname, "./client/build/index.html"),
+//     function (err) {
+//       res.status(500).send(err);
+//     }
+//   );
+// });
 
 const connection_url = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.cokfbhy.mongodb.net/?retryWrites=true&w=majority`
 
-mongoose.connect(connection_url,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+mongoose.connect(connection_url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 app.get('/', (req, res) => res.status(200).send("Home page"));
 
 
 app.post("/products/add", (req, res) => {
-    const productDetail = req.body;
-  
-    console.log("Product Detail >>>>", productDetail);
-  
-    Products.create(productDetail).then((data) => {
-        res.status(201).send(data);
-      })
-      .catch((err) => {
-        res.status(500).send(err.message);
-        console.log(err);
-      })
-  });
+  const productDetail = req.body;
 
-app.get('/products/get', (req, res) =>{
+  console.log("Product Detail >>>>", productDetail);
+
+  Products.create(productDetail).then((data) => {
+    res.status(201).send(data);
+  })
+    .catch((err) => {
+      res.status(500).send(err.message);
+      console.log(err);
+    })
+});
+
+app.get('/products/get', (req, res) => {
   Products.find().then((data) => {
     res.status(200).send(data);
   }).catch((err) => {
@@ -76,9 +76,9 @@ app.post("/auth/signup", async (req, res) => {
     res.send({ message: "The Email is already in use !" });
   } else {
     Users.create(userDetail).then((result) => {
-      res.send({userDetail, message: "User Created Succesfully" });
-     }).catch((err) => {
-    res.status(500).send({ message: err.message });
+      res.send({ userDetail, message: "User Created Succesfully" });
+    }).catch((err) => {
+      res.status(500).send({ message: err.message });
     })
   }
 });
@@ -136,7 +136,7 @@ app.post("/orders/add", (req, res) => {
 
   Orders.create(orderDetail).then((result) => {
     console.log("order added to database >> ", result);
-  }).then((err) => {console.log(err);})
+  }).then((err) => { console.log(err); })
 });
 
 app.post("/orders/get", (req, res) => {
@@ -147,7 +147,7 @@ app.post("/orders/get", (req, res) => {
 
   Orders.find().then((result) => {
     const userOrders = result.filter((order) => order.email === email);
-      res.send(userOrders);
+    res.send(userOrders);
   }).catch((err) => {
     console.log(err);
   })

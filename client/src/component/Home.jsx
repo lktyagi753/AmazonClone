@@ -16,8 +16,6 @@ function Home() {
     fetchdata();
   }, []);
 
-  
-
   return (
     <Container>
       <Navbar />
